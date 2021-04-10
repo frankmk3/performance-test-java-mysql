@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+#    volumes:
+#     - ./dockercompose/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: custom-pass@!
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test-cust-pass@!
+
+  performance-test-mysql-server:
+    depends_on: [ "mysql"]
+    build: dockercompose/performance-test-java-mysql
+    ports:
+     - "1402:1402"
+    environment:
+      MYSQL_HOST: mysql
+    volumes:
+     - ./dockercompose/performance-test-java-mysql/app.jar:/home/app.jar
