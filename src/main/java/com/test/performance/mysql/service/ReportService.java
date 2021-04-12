@@ -2,9 +2,12 @@ package com.test.performance.mysql.service;
 
 import com.test.performance.mysql.model.Report;
 import com.test.performance.mysql.repository.ReportRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class ReportService {
@@ -21,18 +24,19 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    public Iterable<Report> getAll(final String group, final Pageable pageable) {
-//        Query query = new Query();
-//        if (pageable.isPaged()) {
-//            query.skip(pageable.getPageNumber() * pageable.getPageSize());
-//            query.limit(pageable.getPageSize());
-//        }
-//        query.addCriteria(Criteria.where("enabled")
-//                                  .is(true));
-//        if (StringUtils.hasText(group)) {
-//            query.addCriteria(Criteria.where("group")
-//                                      .is(group));
-//        }
-        return reportRepository.findAll();
+    public Page<Report> getAll(final String group, final Pageable pageable) {
+        if (StringUtils.hasText(group)) {
+            return reportRepository.findAllByGroupAndEnabledIsTrue(group, pageable);
+        } else {
+            return reportRepository.findAllByEnabledIsTrue(pageable);
+        }
+    }
+
+    public Report update(Report report) {
+        return reportRepository.save(report);
+    }
+
+    public Optional<Report> getById(String id) {
+        return reportRepository.findById(id);
     }
 }
