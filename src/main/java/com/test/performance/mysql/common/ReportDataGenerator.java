@@ -2,6 +2,7 @@ package com.test.performance.mysql.common;
 
 import com.test.performance.mysql.model.Report;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -32,7 +33,10 @@ public class ReportDataGenerator implements Serializable {
         report.setField6(generateRandomText("field6"));
         //date section
         report.setDate(new Date());
-        report.setDate1(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.HOUR_OF_DAY, -new Random().nextInt(1000));
+        report.setDate1(calendar.getTime());
         report.setDate2(new Date());
         report.setDate3(new Date());
         report.setDate4(new Date());

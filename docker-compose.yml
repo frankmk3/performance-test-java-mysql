@@ -3,7 +3,7 @@ services:
   mysql:
     image: mysql
     ports:
-      - "3306:3306"
+      - "3316:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: custom-pass@!
@@ -11,6 +11,8 @@ services:
       MYSQL_USER: test
       MYSQL_PASSWORD: test-cust-pass@!
 
+    volumes:
+      - ./dockercompose/mysql/data:/var/lib/mysql
   performance-test-mysql-server:
     depends_on: [ "mysql"]
     build: dockercompose/performance-test-java-mysql
@@ -21,17 +23,17 @@ services:
     volumes:
      - ./dockercompose/performance-test-java-mysql/app.jar:/home/app.jar
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: monitoring_prometheus
-    restart: unless-stopped
-    volumes:
-      - ./dockercompose/prometheus/config:/etc/prometheus/
-      - ./dockercompose/prometheus/data:/prometheus
-    expose:
-      - 9090
-    ports:
-      - 9090:9090
-    links:
-      - performance-test-mysql-server:performance-test-mysql-server
-      - mysql:mysql
+#  prometheus:
+#    image: prom/prometheus:latest
+#    container_name: monitoring_prometheus
+#    restart: unless-stopped
+#    volumes:
+#      - ./dockercompose/prometheus/config:/etc/prometheus/
+#      - ./dockercompose/prometheus/data:/prometheus
+#    expose:
+#      - 9090
+#    ports:
+#      - 9090:9090
+#    links:
+#      - performance-test-mysql-server:performance-test-mysql-server
+#      - mysql:mysql
